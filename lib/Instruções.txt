@@ -16,3 +16,8 @@ Cores:
 Verde - #7eaf31
 Creme - #fbecd9
 Marrom - #221d0c
+
+Botões: 
+https://docs.flutter.dev/release/breaking-changes/buttons
+
+Tela de Inserção dos dados da análise de solo: Dividir em 3 ou 4 etapa.
