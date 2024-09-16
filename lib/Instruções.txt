@@ -13,7 +13,7 @@ Dicas:
 debugShowCheckedModeBanner: false - Remover o banner vermelho de debug
 
 Cores: 
-Verde - #7eaf31
+Verde - #7eaf31 
 Creme - #fbecd9
 Marrom - #221d0c
 
