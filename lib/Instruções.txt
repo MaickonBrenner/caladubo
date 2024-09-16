@@ -1,0 +1,18 @@
+Flutter + Dart
+
+Como criar: Ctrl + Shift + P
+
+Iniciar Main:
+- main
+Montar estados:
+- state
+- Flutter state less widget
+- Flutter state full widget
+
+Dicas:
+debugShowCheckedModeBanner: false - Remover o banner vermelho de debug
+
+Cores: 
+Verde - #7eaf31
+Creme - #fbecd9
+Marrom - #221d0c

@@ -13,10 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Caladubo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(126,175,49, 1)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Caladubo'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
