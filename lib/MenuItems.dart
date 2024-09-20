@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'homePage.dart';
 
 class MenuItem {
@@ -15,10 +16,11 @@ abstract class MenuItems {
   static const List<MenuItem> firstItems = [home, share, settings];
   static const List<MenuItem> secondItems = [logout];
 
-  static const home = MenuItem(text: 'Home', icon: Icons.home);
-  static const share = MenuItem(text: 'Share', icon: Icons.share);
-  static const settings = MenuItem(text: 'Settings', icon: Icons.settings);
-  static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
+  static const home = MenuItem(text: 'Inicio', icon: Icons.home);
+  static const share = MenuItem(text: 'Compartilha', icon: Icons.share);
+  static const settings = MenuItem(text: 'Sobre', icon: Icons.info);
+  //static const settings = MenuItem(text: 'Settings', icon: Icons.settings);
+  static const logout = MenuItem(text: 'Sair', icon: Icons.logout);
 
 
   static Widget buildItem(MenuItem item) {
@@ -64,11 +66,7 @@ abstract class MenuItems {
         );*/
         break;
       case MenuItems.logout:
-      /*telaLogin telalogin = new telaLogin();
-        Navigator.push(
-        context as BuildContext,
-        MaterialPageRoute(builder: (context) => telalogin),
-      );*/
+          SystemNavigator.pop();
         break;
     }
   }
