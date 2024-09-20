@@ -49,6 +49,11 @@ class homePageState extends State<homePageNew> {
             ),
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+          onPressed: backPage,
+          tooltip: 'Informações',
+          child: const Icon(Icons.info),
+      ), 
       ),
     );
   }

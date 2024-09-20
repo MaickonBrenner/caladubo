@@ -9,15 +9,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Caladubo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(126,175,49, 1)),
-        useMaterial3: true,
+        primaryColor: Color.fromRGBO(126, 175, 49, 1),
+        scaffoldBackgroundColor: Color.fromRGBO(251, 236, 217, 1)
       ),
       home: const MyHomePage(title: 'Caladubo'),
       debugShowCheckedModeBanner: false,
@@ -36,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
+  void changePage() {
     setState(() {
       Navigator.push(
         context,
@@ -47,30 +46,28 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-      ),
+      ),*/  
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Bem vindo(a) ao',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Image.asset(
+              "images/logo.png",
+              width: 250,
+              height: 250,
             ),
-            ElevatedButton(onPressed: _incrementCounter, child: Text("Iniciar"))
+            ElevatedButton(
+              onPressed: changePage, 
+              child: Text("Iniciar"))
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Informações',
-        child: const Icon(Icons.info),
-      ), 
     );
   }
 }

@@ -21,3 +21,6 @@ Botões:
 https://docs.flutter.dev/release/breaking-changes/buttons
 
 Tela de Inserção dos dados da análise de solo: Dividir em 3 ou 4 etapa.
+
+Imagens: 
+https://www.macoratti.net/19/07/flut_img1.htm
