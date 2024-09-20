@@ -6,7 +6,8 @@ import 'colors.dart';
 class homePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: homePageNew()
+      home: homePageNew(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
