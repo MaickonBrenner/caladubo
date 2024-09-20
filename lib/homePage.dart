@@ -37,7 +37,15 @@ class homePageState extends State<homePageNew> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Caladubo"),
+          title: const Text(
+            'Caladubo',
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              color: Colors.white,
+              fontSize: 22,
+              ),
+            ),
+          backgroundColor: Color.fromRGBO(126, 175, 49, 1),
           actions: [
             DropdownButtonHideUnderline(
               child: DropdownButton2(
@@ -82,7 +90,8 @@ class homePageState extends State<homePageNew> {
                   ],
                   padding: const EdgeInsets.only(left: 16, right: 16),
                 ),
-              ))
+              )
+            )
           ],
         ),
         body: Center(
