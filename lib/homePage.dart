@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'MenuItems.dart';
+import 'main.dart';
 import 'colors.dart';
 
 class homePage extends StatelessWidget {
@@ -24,7 +25,9 @@ class homePageState extends State<homePageNew> {
 
   void backPage() {
     setState(() {
-      Navigator.pop(context);
+      Navigator.push(
+        context,
+         MaterialPageRoute(builder: (context) => MyApp()));
     });
   }
 
@@ -108,12 +111,13 @@ class homePageState extends State<homePageNew> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-          onPressed: backPage,
-          tooltip: 'Informações',
-          child: const Icon(Icons.info),
-      ), 
+            onPressed: backPage,
+            backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
+            foregroundColor: Colors.white,
+            tooltip: 'Informações',
+            child: const Icon(Icons.info),
+          ), 
       ),
     );
   }
-
 }

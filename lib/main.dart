@@ -33,7 +33,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
   void changePage() {
     setState(() {
@@ -56,6 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             const Text(
               'Bem vindo(a) ao',
+              style: TextStyle(
+                color: Color.fromRGBO(34, 29, 12, 1),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Montserrat',
+                fontSize: 22,
+              ),
             ),
             Image.asset(
               "images/logo.png",

@@ -13,14 +13,29 @@ Dicas:
 debugShowCheckedModeBanner: false - Remover o banner vermelho de debug
 
 Cores: 
-Verde - #7eaf31 
-Creme - #fbecd9
-Marrom - #221d0c
+Verde - #7eaf31 - Color.fromRGBO(126, 175, 49, 1)
+Creme - #fbecd9 - Color.fromRGBO(251, 236, 217, 1)
+Marrom - #221d0c - Color.fromRGBO(34, 29, 12, 1)
 
 Botões: 
 https://docs.flutter.dev/release/breaking-changes/buttons
 
-Tela de Inserção dos dados da análise de solo: Dividir em 3 ou 4 etapa.
+Tela de Inserção dos dados da análise de solo: 
+- Dividir em 3 ou 4 etapa
+- Pedir análise do solo antes de entrar no menu da cultura escolhida
+
 
 Imagens: 
 https://www.macoratti.net/19/07/flut_img1.htm
+
+NavBar: 
+https://pub.dev/packages/navbar_router
+
+Animação com Textos: 
+https://www.youtube.com/watch?v=zWUdPPQFndk
+
+Texto Circular: 
+https://www.dhiwise.com/post/flutter-circular-text-how-to-style-curved-text-in-your-app
+
+Icon para passar slides:
+Icons.arrow_circle_left_outlined,
