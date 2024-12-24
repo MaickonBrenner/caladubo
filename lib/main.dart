@@ -68,8 +68,20 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 250,
             ),
             ElevatedButton(
-              onPressed: changePage, 
-              child: Text("Iniciar"))
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(126, 175, 49, 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+              onPressed: changePage,
+                child: Text(
+                  'Iniciar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold)
+                ),
+            )
           ],
         ),
       ),
