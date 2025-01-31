@@ -104,6 +104,7 @@ class homePageState extends State<homePageNew> {
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Container(
+              width: ((MediaQuery.of(context).size.width) / 100 * 95),
               height: constraints.maxHeight,
               child: Center(
                 child: Padding(
