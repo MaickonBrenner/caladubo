@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'MenuItems.dart';
 import 'main.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
@@ -23,6 +24,7 @@ class homePageNew extends StatefulWidget {
 }
 
 class homePageState extends State<homePageNew> {
+  int _index = 0;
 
   void backPage() {
     setState(() {
@@ -99,25 +101,39 @@ class homePageState extends State<homePageNew> {
             )
           ],
         ),
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: SizedBox(
-              child: ElevatedButton(
-                onPressed: backPage,
-                child: Text("Voltar"),
-
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              height: constraints.maxHeight,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    child: ElevatedButton(
+                      onPressed: backPage,
+                      child: Text("Voltar"),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            ),
+            );
+          }
+        ),
+          bottomNavigationBar: SafeArea( 
+            child: FloatingNavbar(
+              onTap: (int val) => setState(() => _index = val),
+                currentIndex: _index,
+                items: [
+                  FloatingNavbarItem(icon: Icons.home, title: "Início"),
+                  FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
+                  FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda")
+                ],
+                backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
+                selectedBackgroundColor: Colors.white,
+                unselectedItemColor: Colors.white.withOpacity(0.6),
+                fontSize: 16,
+            ), 
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: backPage,
-            backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
-            foregroundColor: Colors.white,
-            tooltip: 'Informações',
-            child: const Icon(Icons.info),
-          ), 
       ),
     );
   }

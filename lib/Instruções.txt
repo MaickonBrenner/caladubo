@@ -29,7 +29,7 @@ Imagens:
 https://www.macoratti.net/19/07/flut_img1.htm
 
 NavBar: 
-https://pub.dev/packages/navbar_router
+https://pub.dev/packages/floating_bottom_navigation_bar/example
 
 Animação com Textos: 
 https://www.youtube.com/watch?v=zWUdPPQFndk
@@ -39,3 +39,12 @@ https://www.dhiwise.com/post/flutter-circular-text-how-to-style-curved-text-in-y
 
 Icon para passar slides:
 Icons.arrow_circle_left_outlined,
+
+Botão flutuante (sem precisar, tá aí):
+floatingActionButton: FloatingActionButton(
+            onPressed: backPage,
+            backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
+            foregroundColor: Colors.white,
+            tooltip: 'Informações',
+            child: const Icon(Icons.info),
+          ),
