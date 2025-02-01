@@ -123,17 +123,17 @@ class homePageState extends State<homePageNew> {
             // ),
           ),
           bottomNavigationBar: FloatingNavbar(
-              onTap: _navigateToScreen,
-              currentIndex: _index,
-              items: [
-                FloatingNavbarItem(icon: Icons.home, title: "Início"),
-                FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
-                FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda")
-              ],
-              backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
-              selectedBackgroundColor: Colors.white,
-              unselectedItemColor: Colors.white.withOpacity(0.6),
-              fontSize: 12,
+            onTap: _navigateToScreen,
+            currentIndex: _index,
+            items: [
+              FloatingNavbarItem(icon: Icons.home, title: "Início"),
+              FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
+              FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda")
+            ],
+            backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
+            selectedBackgroundColor: Colors.white,
+            unselectedItemColor: Colors.white.withOpacity(0.6),
+            fontSize: 12,
           ),
       ),
     );
