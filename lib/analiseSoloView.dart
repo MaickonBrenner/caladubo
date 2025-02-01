@@ -209,6 +209,7 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
                           if (_formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Processando dados...')),
+                              // Aqui chama método de feedback e o changePage
                             );
                           }
                         },
