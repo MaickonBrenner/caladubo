@@ -20,6 +20,11 @@ class analiseSoloViewNew extends StatefulWidget {
 
 class analiseSoloViewState extends State<analiseSoloViewNew> {
 
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _tipoSolo = TextEditingController();
+  final TextEditingController _phSolo = TextEditingController();
+
   void changePage() {
     setState(() {
       Navigator.push(
@@ -52,8 +57,68 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
           ),
           backgroundColor: Color.fromRGBO(126, 175, 49, 1),
         ),
-        body: Center(
-          
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  controller: _tipoSolo,
+                  decoration: const InputDecoration(
+                    labelText: 'Tipo de Solo',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira tipo de solo!';
+                    }
+                      return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _phSolo,
+                  decoration: const InputDecoration(
+                    labelText: 'Ph do Solo',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira o ph do solo!';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                Builder(
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(126, 175, 49, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Processando dados...')),
+                            );
+                          }
+                        },
+                        child: const Text(
+                        'Salvar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)
+                        ),
+                      )
+                    ); 
+                  },
+                ),
+              ],
+            )
+          )
         ),
       ),
     );
