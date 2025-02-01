@@ -31,14 +31,19 @@ class homePageState extends State<homePageNew> {
       _index = index;
     });
 
-    switch (index) {
+    switch(index) {
       case 0:
         Navigator.push(
           context, 
           MaterialPageRoute(builder: (context) => MyApp())
         );
         break;
-      //case 1:
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => analiseSoloViewNew())
+        );
+        break;
         
     }
   }
