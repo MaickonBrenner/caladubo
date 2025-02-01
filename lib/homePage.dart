@@ -68,40 +68,47 @@ class homePageState extends State<homePageNew> {
                       child: MenuItems.buildItem(item)
                     ),
                   ),
-                  const DropdownMenuItem<Divider>(
-                      enabled: false, child: Divider()),
-                  ...MenuItems.secondItems.map(
-                    (item) => DropdownMenuItem<MenuItem>(
-                      value: item,
-                      child: MenuItems.buildItem(item),
+                  items: [
+                    ...MenuItems.firstItems.map(
+                      (item) => DropdownMenuItem<MenuItem>(
+                        value: item,
+                        child: MenuItems.buildItem(item)
+                      ),
                     ),
-                  ),
-                ],
-                onChanged: (value) {
-                  MenuItems.onChanged(context, value! as MenuItem);
-                },
-                dropdownStyleData: DropdownStyleData(
-                  width: 160,
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: Color.fromRGBO(126, 175, 49, 1)
-                  ),
-                  offset: const Offset(0, 8),
-                ),
-                menuItemStyleData: MenuItemStyleData(
-                  customHeights: [
-                    ...List<double>.filled(MenuItems.firstItems.length, 48),
-                    8,
-                    ...List<double>.filled(MenuItems.secondItems.length, 48),
+                    const DropdownMenuItem<Divider>(
+                      enabled: false, child: Divider()),
+                      ...MenuItems.secondItems.map(
+                      (item) => DropdownMenuItem<MenuItem>(
+                        value: item,
+                        child: MenuItems.buildItem(item),
+                      ),
+                    ),
                   ],
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                ),
+                  onChanged: (value) {
+                    MenuItems.onChanged(context, value! as MenuItem);
+                  },
+                  dropdownStyleData: DropdownStyleData(
+                    width: 160,
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: Color.fromRGBO(126, 175, 49, 1)
+                    ),
+                    offset: const Offset(0, 8),
+                  ),
+                  menuItemStyleData: MenuItemStyleData(
+                    customHeights: [
+                      ...List<double>.filled(MenuItems.firstItems.length, 48),
+                      8,
+                      ...List<double>.filled(MenuItems.secondItems.length, 48),
+                    ],
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                  ),
+                )
               )
-            )
-          ],
-        ),
-        body: LayoutBuilder(
+            ],
+          ),
+          body: LayoutBuilder(  
           builder: (context, constraints) {
             return Container(
               width: ((MediaQuery.of(context).size.width) / 100 * 95),
@@ -113,27 +120,25 @@ class homePageState extends State<homePageNew> {
                     child: ElevatedButton(
                       onPressed: backPage,
                       child: Text("Voltar"),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }
-        ),
-          bottomNavigationBar: SafeArea( 
-            child: FloatingNavbar(
+              );
+            }
+          ),
+          bottomNavigationBar: FloatingNavbar(
               onTap: (int val) => setState(() => _index = val),
-                currentIndex: _index,
-                items: [
-                  FloatingNavbarItem(icon: Icons.home, title: "Início"),
-                  FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
-                  FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda")
-                ],
-                backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
-                selectedBackgroundColor: Colors.white,
-                unselectedItemColor: Colors.white.withOpacity(0.6),
-                fontSize: 16,
-            ), 
+              currentIndex: _index,
+              items: [
+                FloatingNavbarItem(icon: Icons.home, title: "Início"),
+                FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
+                FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda")
+              ],
+              backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
+              selectedBackgroundColor: Colors.white,
+              unselectedItemColor: Colors.white.withOpacity(0.6),
+              fontSize: 12,
           ),
       ),
     );
