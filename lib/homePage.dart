@@ -52,21 +52,14 @@ class homePageState extends State<homePageNew> {
               fontSize: 22,
               ),
             ),
-          backgroundColor: Color.fromRGBO(126, 175, 49, 1),
-          actions: [
-            DropdownButtonHideUnderline(
-              child: DropdownButton2(
-                customButton: const Icon(
-                  Icons.list,
-                  size: 46,
-                  color: Colors.white,
-                ),
-                items: [
-                  ...MenuItems.firstItems.map(
-                    (item) => DropdownMenuItem<MenuItem>(
-                      value: item,
-                      child: MenuItems.buildItem(item)
-                    ),
+            backgroundColor: Color.fromRGBO(126, 175, 49, 1),
+            actions: [
+              DropdownButtonHideUnderline(
+                child: DropdownButton2(
+                  customButton: const Icon(
+                    Icons.list,
+                    size: 46,
+                    color: Colors.white,
                   ),
                   items: [
                     ...MenuItems.firstItems.map(
