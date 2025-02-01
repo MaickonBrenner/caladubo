@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'homePage.dart';
 import 'main.dart';
+import 'analiseSave.dart';
 
 class MenuItem {
   const MenuItem({
@@ -14,12 +14,13 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [home, share, settings];
+  static const List<MenuItem> firstItems = [home, save, share, settings];
   static const List<MenuItem> secondItems = [logout];
 
   static const home = MenuItem(text: 'Inicio', icon: Icons.home);
   static const share = MenuItem(text: 'Compartilha', icon: Icons.share);
   static const settings = MenuItem(text: 'Sobre', icon: Icons.info);
+  static const save = MenuItem(text: 'Salvos', icon: Icons.save);
   //static const settings = MenuItem(text: 'Settings', icon: Icons.settings);
   static const logout = MenuItem(text: 'Sair', icon: Icons.logout);
 
@@ -51,19 +52,17 @@ abstract class MenuItems {
           MaterialPageRoute(builder: (context) => MyApp()),
         );
         break;
+      case MenuItems.save:
+        Navigator.push(
+          context as BuildContext,
+          MaterialPageRoute(builder: (context) => analiseSaveNew()),
+        );
+        break;
       case MenuItems.settings: //Configurações
-        /*ChatPage chatPage = new ChatPage();
-        Navigator.push(
-          context as BuildContext,
-          MaterialPageRoute(builder: (context) => chatPage),
-          );
-        break;*/
-      case MenuItems.share:
-        /*Calendario calendario = new Calendario();
-        Navigator.push(
-          context as BuildContext,
-          MaterialPageRoute(builder: (context) => calendario),
-        );*/
+
+        break;
+      case MenuItems.share: // Compartilhar
+        
         break;
       case MenuItems.logout:
           SystemNavigator.pop();

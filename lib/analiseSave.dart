@@ -55,6 +55,10 @@ class analiseSaveState extends State<analiseSaveNew> {
               fontSize: 22,
             ),
           ),
+          backgroundColor: Color.fromRGBO(126, 175, 49, 1),
+        ),
+        body: SingleChildScrollView(
+          
         ),
       )
     );
