@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'homePage.dart';
+import 'main.dart';
 
 class MenuItem {
   const MenuItem({
@@ -45,11 +46,10 @@ abstract class MenuItems {
   static void onChanged(BuildContext context, MenuItem item) {
     switch (item) {
       case MenuItems.home:
-       /*ChatHome chatHome = new ChatHome();
         Navigator.push(
           context as BuildContext,
-          MaterialPageRoute(builder: (context) => chatHome),
-        );*/
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
         break;
       case MenuItems.settings: //Configurações
         /*ChatPage chatPage = new ChatPage();

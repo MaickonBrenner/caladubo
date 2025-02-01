@@ -1,11 +1,11 @@
-class AnaliseSolo {
+class AnaliseSoloModel {
   final String tipoSolo;
   final double ph;
   final double materiaOrganica;
   final double fosforo;
   final double potassio;
 
-  AnaliseSolo({required this.tipoSolo, 
+  AnaliseSoloModel({required this.tipoSolo, 
     required this.ph, 
     required this.materiaOrganica, 
     required this.fosforo,

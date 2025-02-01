@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'MenuItems.dart';
 import 'main.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
-import 'colors.dart';
+import 'analiseSoloView.dart';
 
 class homePage extends StatelessWidget {
   Widget build(BuildContext context) {
