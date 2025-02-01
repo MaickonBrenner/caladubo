@@ -26,12 +26,21 @@ class homePageNew extends StatefulWidget {
 class homePageState extends State<homePageNew> {
   int _index = 0;
 
-  void backPage() {
+  void _navigateToScreen(int index) {
     setState(() {
-      Navigator.push(
-        context,
-         MaterialPageRoute(builder: (context) => MyApp()));
+      _index = index;
     });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (context) => MyApp())
+        );
+        break;
+      //case 1:
+        
+    }
   }
 
   @override
@@ -103,13 +112,13 @@ class homePageState extends State<homePageNew> {
           ),
           extendBody: true,
           body: Center(
-            child: ElevatedButton(
-              onPressed: backPage,
-              child: Text("Voltar"),
-            ),
+            // child: ElevatedButton(
+            //   onPressed: backPage,
+            //   child: Text("Voltar"),
+            // ),
           ),
           bottomNavigationBar: FloatingNavbar(
-              onTap: (int val) => setState(() => _index = val),
+              onTap: _navigateToScreen,
               currentIndex: _index,
               items: [
                 FloatingNavbarItem(icon: Icons.home, title: "Início"),
