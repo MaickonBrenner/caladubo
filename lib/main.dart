@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               onPressed: changePage,
-                child: Text(
+                child: const Text(
                   'Iniciar',
                   style: TextStyle(
                     color: Colors.white,

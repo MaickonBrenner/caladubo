@@ -25,7 +25,9 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
 
   final TextEditingController _tipoSolo = TextEditingController();
   final TextEditingController _phSolo = TextEditingController();
+  final TextEditingController _nitrogenio = TextEditingController();
   final TextEditingController _fosforo = TextEditingController();
+  final TextEditingController _potassio = TextEditingController();
   final TextEditingController _dataAnalise = TextEditingController();
 
   Future<void> _selectData(BuildContext context) async {
@@ -78,7 +80,7 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
             onPressed: changePage,
           ),
           title: const Text(
-            'Adicionar Análise de Solo',
+            'Adicionar Dados',
             style: TextStyle(
               fontFamily: 'Montserrat',
               color: Colors.white,
@@ -87,13 +89,21 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
           ),
           backgroundColor: Color.fromRGBO(126, 175, 49, 1),
         ),
-        body: Padding(
+        body: SingleChildScrollView( //Padding
           padding: EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                const Text(
+                  'Nessa seção, você poderá inserir e salvar os dados da análise de solo.',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 15
+                  ),
+                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _tipoSolo,
                   decoration: const InputDecoration(
@@ -111,6 +121,10 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
                   decoration: const InputDecoration(
                     labelText: 'Ph do Solo',
                   ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira o ph do solo!';
@@ -119,9 +133,9 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
                   },
                 ),
                 TextFormField(
-                  controller: _fosforo,
+                  controller: _nitrogenio,
                   decoration: const InputDecoration(
-                    labelText: 'Fósforo',
+                    labelText: 'Nitrogênio (N)',
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter> [
@@ -129,7 +143,39 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
                   ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor, insira apenas números!';
+                      return 'Por favor, insira os valores!';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _fosforo,
+                  decoration: const InputDecoration(
+                    labelText: 'Fósforo (P)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter> [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira os valores!';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _potassio,
+                  decoration: const InputDecoration(
+                    labelText: 'Potássio (K)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter> [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira os valores!';
                     }
                     return null;
                   },
@@ -143,7 +189,7 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
                   onTap: () => _selectData(context),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor, insira a data!';
+                      return 'Por favor, insira a data da análise!';
                     }
                     return null;
                   },

@@ -71,7 +71,7 @@ class homePageState extends State<homePageNew> {
               DropdownButtonHideUnderline(
                 child: DropdownButton2(
                   customButton: const Icon(
-                    Icons.list,
+                    Icons.list_rounded,
                     size: 46,
                     color: Colors.white,
                   ),
@@ -116,7 +116,7 @@ class homePageState extends State<homePageNew> {
             ],
           ),
           extendBody: true,
-          body: Center(
+          body: const Center(
             // child: ElevatedButton(
             //   onPressed: backPage,
             //   child: Text("Voltar"),
