@@ -101,24 +101,12 @@ class homePageState extends State<homePageNew> {
               )
             ],
           ),
-          body: LayoutBuilder(  
-          builder: (context, constraints) {
-            return Container(
-              width: ((MediaQuery.of(context).size.width) / 100 * 95),
-              height: constraints.maxHeight,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: SizedBox(
-                    child: ElevatedButton(
-                      onPressed: backPage,
-                      child: Text("Voltar"),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }
+          extendBody: true,
+          body: Center(
+            child: ElevatedButton(
+              onPressed: backPage,
+              child: Text("Voltar"),
+            ),
           ),
           bottomNavigationBar: FloatingNavbar(
               onTap: (int val) => setState(() => _index = val),
