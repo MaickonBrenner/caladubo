@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Image.asset(
-              "images/logo.png",
+              "assets/images/logo.png",
               width: 250,
               height: 250,
             ),
