@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'main.dart';
-import 'analiseSave.dart';
+import '../main.dart';
+import '../views/analiseSave.dart';
 
 class MenuItem {
   const MenuItem({

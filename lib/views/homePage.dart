@@ -1,8 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'MenuItems.dart';
-import 'main.dart';
+import '../widgets/MenuItems.dart';
+import '../main.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'analiseSoloView.dart';
 
