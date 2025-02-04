@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import 'homePage.dart';
 
@@ -43,7 +44,7 @@ class culturasState extends State<culturasNew> {
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: changePage,
           ),
           title: const Text(
@@ -56,14 +57,57 @@ class culturasState extends State<culturasNew> {
           ),
           backgroundColor: Color.fromRGBO(126, 175, 49, 1),
         ),
-        body: const ResponsiveGridList(
-          horizontalGridMargin: 50,
-          verticalGridMargin: 50,
-          minItemWidth: 100,
-          children: [
-            
-          ],
-        )
+        body: Padding(
+          padding: EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+              const SizedBox(height: 10),
+              const Center(
+                child: Text(
+                  'Selecione a cultura desejada abaixo.',
+                  style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 15
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ResponsiveGridList(
+                  horizontalGridMargin: 80,
+                  verticalGridMargin: 80,
+                  minItemWidth: 100,
+                  children: [
+                    InkWell(
+                      onTap: changePage,
+                      splashColor: Color.fromRGBO(126, 175, 49, 1),
+                      child: Ink.image(
+                        fit: BoxFit.cover,
+                        width: 200,
+                        height: 150,
+                        image: const AssetImage(
+                          'assets/cards/abacate.png'
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                    onTap: changePage,
+                    splashColor: Color.fromRGBO(126, 175, 49, 1),
+                      child: Ink.image(
+                        fit: BoxFit.cover,
+                        width: 200,
+                        height: 150,
+                        image: const AssetImage(
+                          'assets/cards/em_breve.png'
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ) 
       ),
     );
   }
