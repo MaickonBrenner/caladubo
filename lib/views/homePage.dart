@@ -4,6 +4,8 @@ import '../widgets/MenuItems.dart';
 import '../main.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'analiseSoloView.dart';
+import 'culturas.dart';
+
 
 class homePage extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class homePageState extends State<homePageNew> {
       case 0:
         Navigator.push(
           context, 
-          MaterialPageRoute(builder: (context) => MyApp())
+          MaterialPageRoute(builder: (context) => culturasNew())
         );
         break;
       case 1:
@@ -44,7 +46,7 @@ class homePageState extends State<homePageNew> {
         );
         break;
       case 2:
-        
+
         break;
     }
   }

@@ -55,8 +55,15 @@ class culturasState extends State<culturasNew> {
           ),
           backgroundColor: Color.fromRGBO(126, 175, 49, 1),
         ),
-        body: SingleChildScrollView(
-          
+        body: const SingleChildScrollView(
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Card(
+                  //child: Image(image: image),
+                )
+              ]
+          ),
         ),
       )
     );

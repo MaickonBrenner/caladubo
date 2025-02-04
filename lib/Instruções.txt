@@ -31,11 +31,18 @@ https://www.macoratti.net/19/07/flut_img1.htm
 NavBar: 
 https://pub.dev/packages/floating_bottom_navigation_bar/example
 
+Horizontal List (Slide de propagandas)
+https://pub.dev/packages/horizontal_list
+
 Animação com Textos: 
 https://www.youtube.com/watch?v=zWUdPPQFndk
 
 Texto Circular: 
 https://www.dhiwise.com/post/flutter-circular-text-how-to-style-curved-text-in-your-app
+
+Splash Screen
+https://pub.dev/packages/flutter_native_splash
+https://pub.dev/packages/rive_splash_screen
 
 Icon para passar slides:
 Icons.arrow_circle_left_outlined,
