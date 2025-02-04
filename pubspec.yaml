@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   dropdown_button2: ^2.3.9
   floating_bottom_navigation_bar: ^1.5.2
+  responsive_grid_list: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,8 @@ flutter:
 
   assets: 
     - assets/images/logo.png
+    - assets/cards/abacate.png
+    - assets/cards/em_breve.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
