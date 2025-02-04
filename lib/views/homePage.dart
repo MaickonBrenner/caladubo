@@ -1,6 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import '../widgets/MenuItems.dart';
 import '../main.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
@@ -24,7 +23,7 @@ class homePageNew extends StatefulWidget {
 }
 
 class homePageState extends State<homePageNew> {
-  int _index = 0;
+  int _index = 1;
 
   void _navigateToScreen(int index) {
     setState(() {
@@ -44,7 +43,9 @@ class homePageState extends State<homePageNew> {
           MaterialPageRoute(builder: (context) => analiseSoloViewNew())
         );
         break;
+      case 2:
         
+        break;
     }
   }
 
@@ -126,7 +127,7 @@ class homePageState extends State<homePageNew> {
             onTap: _navigateToScreen,
             currentIndex: _index,
             items: [
-              FloatingNavbarItem(icon: Icons.home, title: "Início"),
+              FloatingNavbarItem(icon: Icons.eco_outlined, title: "Culturas"),
               FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
               FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda")
             ],
