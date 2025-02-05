@@ -123,20 +123,28 @@ class homePageState extends State<homePageNew> {
             //   onPressed: backPage,
             //   child: Text("Voltar"),
             // ),
+          ),     
+          bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Container(
+              height: 110, // Ajusta a altura para garantir que não haja overflow
+              child: FloatingNavbar(
+                onTap: _navigateToScreen,
+                currentIndex: _index,
+                items: [
+                  FloatingNavbarItem(icon: Icons.eco_outlined, title: "Culturas"),
+                  FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
+                  FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda"),
+                ],
+                backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
+                selectedBackgroundColor: Colors.white,
+                unselectedItemColor: Colors.white.withOpacity(0.6),
+                fontSize: 12,
+              ),
+            ),
           ),
-          bottomNavigationBar: FloatingNavbar(
-            onTap: _navigateToScreen,
-            currentIndex: _index,
-            items: [
-              FloatingNavbarItem(icon: Icons.eco_outlined, title: "Culturas"),
-              FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
-              FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda")
-            ],
-            backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
-            selectedBackgroundColor: Colors.white,
-            unselectedItemColor: Colors.white.withOpacity(0.6),
-            fontSize: 12,
-          ),
+        ),
       ),
     );
   }
