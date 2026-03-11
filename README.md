@@ -2,10 +2,10 @@
  Repositório oficial da aplicação.
 
 ## Sobre o projeto
- A aplicação "Calabudo" é um protótipo desenvolvido em Flutter, com a finalidade de realizar cálculos para adubução de culturas de plantas.
+ O **Calabudo** é um aplicativo para dispositivos móveis capaz de calcular a necessidade de nutrientes das plantas com base nos resultados obtidos por meio da análise de solo. Esses cálculos seguirão as recomendações específicas dos manuais de cada cultura e da região de aplicação.
 
 ## Membros
- ### Desenvolvedor: 
+ ### Desenvolvedores: 
  - Claudia Lorrany de Souza Oliveira
  - Maickon Brenner Marques Brandão
 
