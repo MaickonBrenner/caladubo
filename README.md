@@ -6,10 +6,10 @@
 
 ## Membros
  ### Desenvolvedor: 
+ - Claudia Lorrany de Souza Oliveira
  - Maickon Brenner Marques Brandão
 
  ### Consultorias, orietações e assistência:
- - Prof. Ismail Soares
  - Lizandra de Fátima Ladislau Aguiar
 
 ## Uso do aplicativo
