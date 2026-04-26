@@ -26,7 +26,7 @@ class analiseSaveState extends State<analiseSaveNew> {
     setState(() {
       Navigator.push(
         context,
-         MaterialPageRoute(builder: (context) => homePage()));
+         MaterialPageRoute(builder: (context) => HomePage()));
     });
   }
 

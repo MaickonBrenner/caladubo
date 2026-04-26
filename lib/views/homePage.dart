@@ -1,150 +1,256 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import '../widgets/MenuItems.dart';
-import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
-import 'analiseSoloView.dart';
-import 'culturas.dart';
+import 'package:intl/intl.dart';
+import '../database/db_helper.dart'; 
+import '../models/analiseSoloModel.dart'; 
+import 'analisesSalvasPage.dart';
 
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-class homePage extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: homePageNew(),
-      debugShowCheckedModeBanner: false,
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentStep = 0;
+
+  // Controllers para os campos de entrada
+  final _titulo = TextEditingController();
+  final _profundidade = TextEditingController();
+  final _ph = TextEditingController();
+  final _argila = TextEditingController();
+  final _mo = TextEditingController();
+  final _p = TextEditingController();
+  final _k = TextEditingController();
+  final _ca = TextEditingController();
+  final _mg = TextEditingController();
+  final _na = TextEditingController();
+  final _al = TextEditingController();
+  final _h = TextEditingController();
+
+  final Color verdeCaladubo = const Color.fromRGBO(126, 175, 49, 1);
+
+  @override
+  void dispose() {
+    // É uma boa prática limpar os controllers para evitar vazamento de memória
+    _titulo.dispose();
+    _profundidade.dispose();
+    _ph.dispose();
+    _argila.dispose();
+    _mo.dispose();
+    _p.dispose();
+    _k.dispose();
+    _ca.dispose();
+    _mg.dispose();
+    _na.dispose();
+    _al.dispose();
+    _h.dispose();
+    super.dispose();
+  }
+
+  void _salvarAnalise() async {
+    // 1. Preparação dos dados e cálculos agronômicos
+    String dataFormatada = DateFormat('dd.MM.yyyy').format(DateTime.now());
+    String nomeDigitado = _titulo.text.isEmpty ? "Área Sem Nome" : _titulo.text;
+
+    // Parsing dos valores numéricos com segurança
+    double k_mg = double.tryParse(_k.text) ?? 0.0;
+    double ca = double.tryParse(_ca.text) ?? 0.0;
+    double mg = double.tryParse(_mg.text) ?? 0.0;
+    double al = double.tryParse(_al.text) ?? 0.0;
+    double h = double.tryParse(_h.text) ?? 0.0;
+
+    // Lógica Matemática
+    double k_cmol = k_mg / 391.0;
+    double h_al = h + al;
+    double sb = ca + mg + k_cmol;
+    double ctc = sb + h_al;
+    double v_atual = ctc > 0 ? (sb / ctc) * 100 : 0.0;
+
+    double v_desejado = 60.0; // Valor padrão de exemplo
+    double prnt = 100.0;
+    double necessidadeCalagem = 0.0;
+    String avisoSolo = "Solo apresenta boa fertilidade inicial.";
+
+    if (v_atual < v_desejado) {
+      necessidadeCalagem = (ctc * (v_desejado - v_atual)) / prnt;
+      if (necessidadeCalagem > 0) {
+        avisoSolo =
+            "ATENÇÃO: Baixa saturação de bases (${v_atual.toStringAsFixed(1)}%).\nRecomendação: Aplicar ${necessidadeCalagem.toStringAsFixed(2)} t/ha de calcário.";
+      }
+    }
+
+    // 2. Criar o objeto do Modelo para o SQLite
+    AnaliseSolo novaAnalise = AnaliseSolo(
+      titulo: nomeDigitado,
+      data: dataFormatada,
+      profundidade: double.tryParse(_profundidade.text) ?? 0.0,
+      argila: double.tryParse(_argila.text) ?? 0.0,
+      mo: double.tryParse(_mo.text) ?? 0.0,
+      ph: double.tryParse(_ph.text) ?? 0.0,
+      al: al,
+      h: h,
+      p: double.tryParse(_p.text) ?? 0.0,
+      k: k_mg,
+      ca: ca,
+      mg: mg,
+      na: double.tryParse(_na.text) ?? 0.0,
+      detalhes: "V%: ${v_atual.toStringAsFixed(1)}% | CTC: ${ctc.toStringAsFixed(2)}\n$avisoSolo",
+    );
+
+    // 3. Persistência via SQLite
+    await DBHelper().insertAnalise(novaAnalise);
+
+    if (!mounted) return;
+
+    // 4. Feedback Visual para o usuário
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.science, color: Colors.green),
+            SizedBox(width: 10),
+            Text("Resultado da Análise"),
+          ],
+        ),
+        content: Text("Dados de '$nomeDigitado' salvos com sucesso no SQLite!\n\n"
+            "Soma de Bases (SB): ${sb.toStringAsFixed(2)}\n"
+            "CTC do Solo: ${ctc.toStringAsFixed(2)}\n\n"
+            "$avisoSolo"),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: verdeCaladubo),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AnalisesSalvasPage()),
+              );
+              _resetForm();
+            },
+            child: const Text("Ver no Histórico", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      ),
     );
   }
-}
 
-class homePageNew extends StatefulWidget {
-  const homePageNew({Key? key}) : super(key: key);
-  @override
-  homePageState createState() {
-    return homePageState();
-  }
-}
-
-class homePageState extends State<homePageNew> {
-  int _index = 1;
-
-  void _navigateToScreen(int index) {
+  void _resetForm() {
     setState(() {
-      _index = index;
+      _titulo.clear();
+      _profundidade.clear();
+      _argila.clear();
+      _mo.clear();
+      _ph.clear();
+      _p.clear();
+      _k.clear();
+      _ca.clear();
+      _mg.clear();
+      _na.clear();
+      _al.clear();
+      _h.clear();
+      _currentStep = 0;
     });
-
-    switch(index) {
-      case 0:
-        Navigator.push(
-          context, 
-          MaterialPageRoute(builder: (context) => culturasNew())
-        );
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => analiseSoloViewNew())
-        );
-        break;
-      case 2:
-
-        break;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Color.fromRGBO(126, 175, 49, 1),
-        scaffoldBackgroundColor: Color.fromRGBO(251, 236, 217, 1),
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(251, 236, 217, 1),
+      appBar: AppBar(
+        title: const Text("Nova Análise de Solo"),
+        backgroundColor: verdeCaladubo,
+        foregroundColor: Colors.white,
       ),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Caladubo',
-            style: TextStyle(
-              fontFamily: 'Montserrat',
-              color: Colors.white,
-              fontSize: 22,
-              ),
+      body: Stepper(
+        type: StepperType.vertical,
+        currentStep: _currentStep,
+        onStepTapped: (step) => setState(() => _currentStep = step),
+        onStepContinue: () {
+          if (_currentStep < 3) {
+            setState(() => _currentStep += 1);
+          } else {
+            _salvarAnalise();
+          }
+        },
+        onStepCancel: () {
+          if (_currentStep > 0) {
+            setState(() => _currentStep -= 1);
+          }
+        },
+        controlsBuilder: (BuildContext context, ControlsDetails details) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Row(
+              children: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: verdeCaladubo),
+                  onPressed: details.onStepContinue,
+                  child: Text(_currentStep == 3 ? 'Finalizar e Salvar' : 'Próximo',
+                      style: const TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(width: 10),
+                if (_currentStep > 0)
+                  TextButton(
+                    onPressed: details.onStepCancel,
+                    child: const Text('Voltar', style: TextStyle(color: Colors.grey)),
+                  ),
+              ],
             ),
-            backgroundColor: Color.fromRGBO(126, 175, 49, 1),
-            actions: [
-              DropdownButtonHideUnderline(
-                child: DropdownButton2(
-                  customButton: const Icon(
-                    Icons.list_rounded,
-                    size: 46,
-                    color: Colors.white,
-                  ),
-                  items: [
-                    ...MenuItems.firstItems.map(
-                      (item) => DropdownMenuItem<MenuItem>(
-                        value: item,
-                        child: MenuItems.buildItem(item)
-                      ),
-                    ),
-                    const DropdownMenuItem<Divider>(
-                      enabled: false, child: Divider()),
-                      ...MenuItems.secondItems.map(
-                      (item) => DropdownMenuItem<MenuItem>(
-                        value: item,
-                        child: MenuItems.buildItem(item),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    MenuItems.onChanged(context, value! as MenuItem);
-                  },
-                  dropdownStyleData: DropdownStyleData(
-                    width: 160,
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Color.fromRGBO(126, 175, 49, 1)
-                    ),
-                    offset: const Offset(0, 8),
-                  ),
-                  menuItemStyleData: MenuItemStyleData(
-                    customHeights: [
-                      ...List<double>.filled(MenuItems.firstItems.length, 48),
-                      8,
-                      ...List<double>.filled(MenuItems.secondItems.length, 48),
-                    ],
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                  ),
-                )
-              )
-            ],
-          ),
-          extendBody: true,
-          body: const Center(
-            // child: ElevatedButton(
-            //   onPressed: backPage,
-            //   child: Text("Voltar"),
-            // ),
-          ),     
-          bottomNavigationBar: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Container(
-              height: 110, // Ajusta a altura para garantir que não haja overflow
-              child: FloatingNavbar(
-                onTap: _navigateToScreen,
-                currentIndex: _index,
-                items: [
-                  FloatingNavbarItem(icon: Icons.eco_outlined, title: "Culturas"),
-                  FloatingNavbarItem(icon: Icons.task_rounded, title: "Análise"),
-                  FloatingNavbarItem(icon: Icons.help_center, title: "Ajuda"),
-                ],
-                backgroundColor: const Color.fromRGBO(158, 215, 66, 1),
-                selectedBackgroundColor: Colors.white,
-                unselectedItemColor: Colors.white.withOpacity(0.6),
-                fontSize: 12,
-              ),
+          );
+        },
+        steps: [
+          Step(
+            title: const Text('1. Identificação', style: TextStyle(fontWeight: FontWeight.bold)),
+            content: Column(
+              children: [
+                TextFormField(controller: _titulo, decoration: const InputDecoration(labelText: 'Título da Análise (Ex: Talhão 01)')),
+                TextFormField(controller: _profundidade, decoration: const InputDecoration(labelText: 'Profundidade (cm)'), keyboardType: TextInputType.number),
+              ],
             ),
+            isActive: _currentStep >= 0,
+            state: _currentStep > 0 ? StepState.complete : StepState.indexed,
           ),
-        ),
+          Step(
+            title: const Text('2. Físico e Matéria Orgânica', style: TextStyle(fontWeight: FontWeight.bold)),
+            content: Column(
+              children: [
+                TextFormField(controller: _argila, decoration: const InputDecoration(labelText: 'Argila (%)'), keyboardType: TextInputType.number),
+                TextFormField(controller: _mo, decoration: const InputDecoration(labelText: 'M.O. (Matéria Orgânica)'), keyboardType: TextInputType.number),
+              ],
+            ),
+            isActive: _currentStep >= 1,
+            state: _currentStep > 1 ? StepState.complete : StepState.indexed,
+          ),
+          Step(
+            title: const Text('3. Acidez', style: TextStyle(fontWeight: FontWeight.bold)),
+            content: Column(
+              children: [
+                TextFormField(controller: _ph, decoration: const InputDecoration(labelText: 'pH em Água ou CaCl2'), keyboardType: TextInputType.number),
+                TextFormField(controller: _al, decoration: const InputDecoration(labelText: 'Alumínio Tóxico (Al³⁺)'), keyboardType: TextInputType.number),
+                TextFormField(controller: _h, decoration: const InputDecoration(labelText: 'Hidrogênio (H⁺)'), keyboardType: TextInputType.number),
+              ],
+            ),
+            isActive: _currentStep >= 2,
+            state: _currentStep > 2 ? StepState.complete : StepState.indexed,
+          ),
+          Step(
+            title: const Text('4. Macronutrientes e Bases', style: TextStyle(fontWeight: FontWeight.bold)),
+            content: Column(
+              children: [
+                TextFormField(controller: _p, decoration: const InputDecoration(labelText: 'Fósforo (P)'), keyboardType: TextInputType.number),
+                TextFormField(controller: _k, decoration: const InputDecoration(labelText: 'Potássio (K) - mg/dm³'), keyboardType: TextInputType.number),
+                TextFormField(controller: _ca, decoration: const InputDecoration(labelText: 'Cálcio (Ca²⁺) - cmol/dm³'), keyboardType: TextInputType.number),
+                TextFormField(controller: _mg, decoration: const InputDecoration(labelText: 'Magnésio (Mg²⁺) - cmol/dm³'), keyboardType: TextInputType.number),
+                TextFormField(controller: _na, decoration: const InputDecoration(labelText: 'Sódio (Na⁺)'), keyboardType: TextInputType.number),
+              ],
+            ),
+            isActive: _currentStep >= 3,
+            state: _currentStep == 3 ? StepState.editing : StepState.indexed,
+          ),
+        ],
       ),
     );
   }

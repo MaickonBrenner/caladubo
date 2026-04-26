@@ -58,7 +58,7 @@ class analiseSoloViewState extends State<analiseSoloViewNew> {
     setState(() {
       Navigator.push(
         context,
-         MaterialPageRoute(builder: (context) => homePage()));
+         MaterialPageRoute(builder: (context) => HomePage()));
     });
   }
 

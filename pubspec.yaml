@@ -38,6 +38,11 @@ dependencies:
   dropdown_button2: ^2.3.9
   floating_bottom_navigation_bar: ^1.5.2
   responsive_grid_list: ^1.4.0
+  intl: ^0.20.2
+  shared_preferences: ^2.3.3
+  sqflite: ^2.3.3+1         
+  path: ^1.9.0
+  sqflite_common_ffi: ^2.3.3
 
 dev_dependencies:
   flutter_test:
