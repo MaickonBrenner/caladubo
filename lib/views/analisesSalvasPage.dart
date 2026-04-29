@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../database/db_helper.dart';
 import '../models/analiseSoloModel.dart';
+import 'homePage.dart';
 
 class AnalisesSalvasPage extends StatefulWidget {
   const AnalisesSalvasPage({super.key});
@@ -19,7 +20,6 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
     _atualizarLista();
   }
 
-  // Função para buscar os dados do SQLite
   Future<void> _atualizarLista() async {
     setState(() => _carregando = true);
     final dados = await DBHelper().getAnalises();
@@ -31,17 +31,29 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
 
   Future<void> _deletarAnalise(int? id) async {
     if (id == null) return;
-
-    await DBHelper().deleteAnalise(id); 
-    
-    _atualizarLista(); 
+    await DBHelper().deleteAnalise(id);
+    _atualizarLista();
 
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Análise excluída.', style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.red),
+        content: Text('Análise excluída.', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.red,
+      ),
     );
+  }
+
+  // Função centralizada para abrir a edição
+  void _irParaEdicao(AnaliseSolo analise) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(analiseParaEditar: analise),
+      ),
+    ).then((value) {
+      // Se a HomePage retornar 'true', significa que algo foi salvo
+      _atualizarLista();
+    });
   }
 
   @override
@@ -76,9 +88,18 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
                         title: Text(analise.titulo,
                             style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text("Data: ${analise.data}"),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline, color: Colors.red),
-                          onPressed: () => _confirmarExclusao(analise),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined, color: Colors.blue),
+                              onPressed: () => _irParaEdicao(analise),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline, color: Colors.red),
+                              onPressed: () => _confirmarExclusao(analise),
+                            ),
+                          ],
                         ),
                         onTap: () => _mostrarDetalhes(context, analise),
                       ),
@@ -124,12 +145,31 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(analise.titulo,
-                  style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green)),
-              Text("Data da coleta: ${analise.data}", style: const TextStyle(color: Colors.grey)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(analise.titulo,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green)),
+                        Text("Data: ${analise.data}", style: const TextStyle(color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    onPressed: () {
+                      Navigator.pop(context); // Fecha o modal
+                      _irParaEdicao(analise); // Abre a edição
+                    },
+                  ),
+                ],
+              ),
               const Divider(height: 20),
               Expanded(
                 child: SingleChildScrollView(

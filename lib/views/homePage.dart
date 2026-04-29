@@ -5,7 +5,8 @@ import '../models/analiseSoloModel.dart';
 import 'analisesSalvasPage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final AnaliseSolo? analiseParaEditar;
+  const HomePage({super.key, this.analiseParaEditar});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -31,8 +32,28 @@ class _HomePageState extends State<HomePage> {
   final Color verdeCaladubo = const Color.fromRGBO(126, 175, 49, 1);
 
   @override
+  void initState() {
+    super.initState();
+    // Se estiver editando, preenche os campos com os dados existentes
+    if (widget.analiseParaEditar != null) {
+      final a = widget.analiseParaEditar!;
+      _titulo.text = a.titulo;
+      _profundidade.text = a.profundidade.toString();
+      _argila.text = a.argila.toString();
+      _mo.text = a.mo.toString();
+      _ph.text = a.ph.toString();
+      _al.text = a.al.toString();
+      _h.text = a.h.toString();
+      _p.text = a.p.toString();
+      _k.text = a.k.toString();
+      _ca.text = a.ca.toString();
+      _mg.text = a.mg.toString();
+      _na.text = a.na.toString();
+    }
+  }
+
+  @override
   void dispose() {
-    // É uma boa prática limpar os controllers para evitar vazamento de memória
     _titulo.dispose();
     _profundidade.dispose();
     _ph.dispose();
@@ -49,25 +70,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _salvarAnalise() async {
-    // 1. Preparação dos dados e cálculos agronômicos
-    String dataFormatada = DateFormat('dd.MM.yyyy').format(DateTime.now());
+    // 1. Preparação dos dados e cálculos
+    // Mantemos a data original se for edição, ou criamos uma nova se for cadastro
+    String dataFinal = widget.analiseParaEditar?.data ?? DateFormat('dd.MM.yyyy').format(DateTime.now());
     String nomeDigitado = _titulo.text.isEmpty ? "Área Sem Nome" : _titulo.text;
 
-    // Parsing dos valores numéricos com segurança
     double k_mg = double.tryParse(_k.text) ?? 0.0;
     double ca = double.tryParse(_ca.text) ?? 0.0;
     double mg = double.tryParse(_mg.text) ?? 0.0;
     double al = double.tryParse(_al.text) ?? 0.0;
     double h = double.tryParse(_h.text) ?? 0.0;
 
-    // Lógica Matemática
     double k_cmol = k_mg / 391.0;
     double h_al = h + al;
     double sb = ca + mg + k_cmol;
     double ctc = sb + h_al;
     double v_atual = ctc > 0 ? (sb / ctc) * 100 : 0.0;
 
-    double v_desejado = 60.0; // Valor padrão de exemplo
+    double v_desejado = 60.0; 
     double prnt = 100.0;
     double necessidadeCalagem = 0.0;
     String avisoSolo = "Solo apresenta boa fertilidade inicial.";
@@ -75,15 +95,15 @@ class _HomePageState extends State<HomePage> {
     if (v_atual < v_desejado) {
       necessidadeCalagem = (ctc * (v_desejado - v_atual)) / prnt;
       if (necessidadeCalagem > 0) {
-        avisoSolo =
-            "ATENÇÃO: Baixa saturação de bases (${v_atual.toStringAsFixed(1)}%).\nRecomendação: Aplicar ${necessidadeCalagem.toStringAsFixed(2)} t/ha de calcário.";
+        avisoSolo = "ATENÇÃO: Baixa saturação de bases (${v_atual.toStringAsFixed(1)}%).\nRecomendação: Aplicar ${necessidadeCalagem.toStringAsFixed(2)} t/ha de calcário.";
       }
     }
 
-    // 2. Criar o objeto do Modelo para o SQLite
-    AnaliseSolo novaAnalise = AnaliseSolo(
+    // 2. Criar/Atualizar o objeto do Modelo
+    AnaliseSolo analiseProcessada = AnaliseSolo(
+      id: widget.analiseParaEditar?.id, // Crítico: Se tiver ID, o SQLite entende que é Update
       titulo: nomeDigitado,
-      data: dataFormatada,
+      data: dataFinal,
       profundidade: double.tryParse(_profundidade.text) ?? 0.0,
       argila: double.tryParse(_argila.text) ?? 0.0,
       mo: double.tryParse(_mo.text) ?? 0.0,
@@ -98,39 +118,44 @@ class _HomePageState extends State<HomePage> {
       detalhes: "V%: ${v_atual.toStringAsFixed(1)}% | CTC: ${ctc.toStringAsFixed(2)}\n$avisoSolo",
     );
 
-    // 3. Persistência via SQLite
-    await DBHelper().insertAnalise(novaAnalise);
+    // 3. Persistência Decisiva (Insert vs Update)
+    if (widget.analiseParaEditar == null) {
+      await DBHelper().insertAnalise(analiseProcessada);
+    } else {
+      await DBHelper().updateAnalise(analiseProcessada);
+    }
 
     if (!mounted) return;
 
-    // 4. Feedback Visual para o usuário
+    // 4. Feedback
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.science, color: Colors.green),
-            SizedBox(width: 10),
-            Text("Resultado da Análise"),
+            Icon(Icons.check_circle, color: verdeCaladubo),
+            const SizedBox(width: 10),
+            Text(widget.analiseParaEditar == null ? "Salvo" : "Atualizado"),
           ],
         ),
-        content: Text("Dados de '$nomeDigitado' salvos com sucesso no SQLite!\n\n"
-            "Soma de Bases (SB): ${sb.toStringAsFixed(2)}\n"
-            "CTC do Solo: ${ctc.toStringAsFixed(2)}\n\n"
-            "$avisoSolo"),
+        content: Text("Dados de '$nomeDigitado' processados com sucesso!"),
         actions: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: verdeCaladubo),
             onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AnalisesSalvasPage()),
-              );
-              _resetForm();
+              Navigator.pop(context); // Fecha o dialog
+              // Se veio da tela de histórico, apenas volta para lá atualizando
+              if (widget.analiseParaEditar != null) {
+                Navigator.pop(context, true); 
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AnalisesSalvasPage()),
+                );
+              }
             },
-            child: const Text("Ver no Histórico", style: TextStyle(color: Colors.white)),
+            child: const Text("OK", style: TextStyle(color: Colors.white)),
           )
         ],
       ),
@@ -157,10 +182,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isEditing = widget.analiseParaEditar != null;
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(251, 236, 217, 1),
       appBar: AppBar(
-        title: const Text("Nova Análise de Solo"),
+        title: Text(isEditing ? "Editar Análise" : "Nova Análise de Solo"),
         backgroundColor: verdeCaladubo,
         foregroundColor: Colors.white,
       ),
@@ -188,7 +215,9 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: verdeCaladubo),
                   onPressed: details.onStepContinue,
-                  child: Text(_currentStep == 3 ? 'Finalizar e Salvar' : 'Próximo',
+                  child: Text(_currentStep == 3 
+                      ? (isEditing ? 'Atualizar Dados' : 'Finalizar e Salvar') 
+                      : 'Próximo',
                       style: const TextStyle(color: Colors.white)),
                 ),
                 const SizedBox(width: 10),

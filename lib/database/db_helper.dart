@@ -71,6 +71,16 @@ class DBHelper {
     ));
   }
 
+  Future<int> updateAnalise(AnaliseSolo analise) async {
+    final db = await database;
+    return await db.update(
+      'analises',
+      analise.toMap(),
+      where: 'id = ?',
+      whereArgs: [analise.id],
+    );
+  }
+
   Future<int> deleteAnalise(int id) async {
     final db = await database;
     return await db.delete(
