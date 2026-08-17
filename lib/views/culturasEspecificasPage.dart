@@ -10,9 +10,9 @@ class CulturasEspecificasPage extends StatelessWidget {
     final Map<String, List<Map<String, String>>> bancoDeCulturas = {
       "Frutíferas": [
         {"nome": "Abacate", "imagem": "assets/cards/abacate.png"},
+        {"nome": "Banana", "imagem": "assets/cards/banana.png"},
         {"nome": "Abacaxi", "imagem": "assets/cards/abacaxi.png"},
         {"nome": "Laranja", "imagem": "assets/cards/laranja.png"},
-        {"nome": "Maracujá", "imagem": "assets/cards/maracuja.png"},
       ],
       "Grandes Cul.": [
         {"nome": "Soja", "imagem": "assets/cards/soja.png"},

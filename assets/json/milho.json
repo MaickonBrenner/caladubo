@@ -1,0 +1,33 @@
+{
+  "analise_solo": {
+    "argila": 0,
+    "mo": 0,
+    "ph": 0,
+    "al": 0,
+    "h": 0,
+    "p": 0,
+    "k": 0,
+    "ca": 0,
+    "mg": 0,
+    "na": 0
+  },
+  "parametros_recomendacao": {
+    "calagem": {
+      "metodo": "saturacao_por_bases",
+      "v2_esperado": 0,
+      "prnt_calcario": 0,
+      "superficie_total_percentual": 100
+    },
+    "gessagem": {
+      "metodo": "teor_argila",
+      "necessidade_gesso_t_ha": 0
+    },
+    "npk": {
+      "cultura": "milho",
+      "produtividade_esperada_t_ha": 0,
+      "recomendacao_n": 0,
+      "recomendacao_p2o5": 0,
+      "recomendacao_k2o": 0
+    }
+  }
+}

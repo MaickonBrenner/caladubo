@@ -6,11 +6,12 @@ class GruposCulturasPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> grupos = [
-      {"nome": "Frutíferas", "icone": Icons.apple},
-      {"nome": "Grandes Cul.", "icone": Icons.grass},
-      {"nome": "Leguminosas", "icone": Icons.spa},
-      {"nome": "Olericultura", "icone": Icons.local_florist},
+    // 1. Mapeamos os caminhos das imagens (String) e não o Widget em si
+    final List<Map<String, String>> grupos = [
+      {"nome": "Frutíferas", "imagem": "assets/cards/abacate.png"},
+      {"nome": "Grandes Cul.", "imagem": "assets/cards/milho.png"},
+      {"nome": "Leguminosas", "imagem": "assets/cards/feijao.png"},
+      {"nome": "Olericultura", "imagem": "assets/cards/cenoura.png"},
     ];
 
     return Container(
@@ -61,15 +62,19 @@ class GruposCulturasPage extends StatelessWidget {
                         Expanded(
                           child: Container(
                             width: double.infinity,
-                            color: Colors.grey[
-                                200], // Fundo levemente cinza para destacar o ícone
-
-                            // AQUI ESTÁ O SEU ÍCONE DE VOLTA!
-                            child: Icon(grupos[index]["icone"],
-                                size: 70,
-                                color: const Color.fromRGBO(
-                                    126, 175, 49, 1) // Verde do tema
-                                ),
+                            padding: const EdgeInsets.all(16),
+                            color: Colors.grey[200],
+                            
+                            // 2. Usamos Image.asset para renderizar a imagem com tratamento de erro
+                            child: Image.asset(
+                              grupos[index]["imagem"]!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) => const Icon(
+                                Icons.eco,
+                                size: 50,
+                                color: Color.fromRGBO(126, 175, 49, 1),
+                              ),
+                            ),
                           ),
                         ),
                         Container(
