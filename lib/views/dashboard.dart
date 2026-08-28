@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'gruposCulturasPage.dart';
 import 'homePage.dart';
 import 'analisesSalvasPage.dart';
+import 'ajudaPage.dart';
+import 'dart:io';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -22,23 +24,50 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
+  void _confirmarSaida() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Sair do aplicativo?"),
+        content: const Text("Tem certeza que deseja fechar o Caladubo?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar", style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                exit(0);
+              } else {
+                SystemNavigator.pop();
+              }
+            },
+            child: const Text("Sair", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBody() {
     switch (_index) {
-      case 0: return const GruposCulturasPage();
-      case 1: return const HomePage();
-      case 2: return const Center(
-          child: Text('Central de Ajuda\n\nEm breve tutoriais de uso.',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey, fontFamily: 'Montserrat'),
-          ),
-        );
-      default: return const GruposCulturasPage();
+      case 0:
+        return const GruposCulturasPage();
+      case 1:
+        return const HomePage();
+      case 2:
+        return const AjudaPage();
+      default:
+        return const GruposCulturasPage();
     }
   }
 
-  Widget _buildNavItem({required IconData icon, required String title, required int index}) {
+  Widget _buildNavItem(
+      {required IconData icon, required String title, required int index}) {
     final bool isSelected = _index == index;
-    final Color verdePrincipal = const Color.fromRGBO(126, 175, 49, 1);
+    const Color verdePrincipal = Color.fromRGBO(126, 175, 49, 1);
 
     return GestureDetector(
       onTap: () => _navigateToScreen(index),
@@ -46,7 +75,7 @@ class _DashboardPageState extends State<DashboardPage> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent, 
+          color: isSelected ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(15),
         ),
         child: Column(
@@ -55,14 +84,16 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             Icon(
               icon,
-              color: isSelected ? verdePrincipal : Colors.white.withOpacity(0.8),
+              color:
+                  isSelected ? verdePrincipal : Colors.white.withOpacity(0.8),
               size: 24,
             ),
             const SizedBox(height: 4),
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? verdePrincipal : Colors.white.withOpacity(0.8),
+                color:
+                    isSelected ? verdePrincipal : Colors.white.withOpacity(0.8),
                 fontSize: 12,
                 fontFamily: 'Montserrat',
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -76,15 +107,18 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Color verdePrincipal = const Color.fromRGBO(126, 175, 49, 1);
-    final Color verdeClaroBarra = const Color.fromRGBO(158, 215, 66, 1);
+    const Color verdePrincipal = Color.fromRGBO(126, 175, 49, 1);
+    const Color verdeClaroBarra = Color.fromRGBO(158, 215, 66, 1);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           _titulos[_index],
           style: const TextStyle(
-            fontFamily: 'Montserrat', color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.5,
+            fontFamily: 'Montserrat',
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
           ),
         ),
         centerTitle: true,
@@ -92,7 +126,6 @@ class _DashboardPageState extends State<DashboardPage> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-
       endDrawer: Drawer(
         child: Column(
           children: [
@@ -102,37 +135,49 @@ class _DashboardPageState extends State<DashboardPage> {
               color: verdePrincipal,
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.only(left: 20, top: 40),
-              child: const Text('MENU', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, fontFamily: 'Montserrat')),
+              child: const Text('MENU',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat')),
             ),
             ListTile(
               leading: const Icon(Icons.folder_shared, color: Colors.green),
-              title: const Text('Análises Salvas', style: TextStyle(fontFamily: 'Montserrat')),
+              title: const Text('Análises Salvas',
+                  style: TextStyle(fontFamily: 'Montserrat')),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const AnalisesSalvasPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AnalisesSalvasPage()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.share, color: Colors.green),
-              title: const Text('Compartilhar App', style: TextStyle(fontFamily: 'Montserrat')),
+              title: const Text('Compartilhar App',
+                  style: TextStyle(fontFamily: 'Montserrat')),
               onTap: () => Navigator.pop(context),
             ),
             const Spacer(),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.power_settings_new, color: Colors.red),
-              title: const Text('Sair', style: TextStyle(fontFamily: 'Montserrat', color: Colors.red)),
-              onTap: () => SystemNavigator.pop(),
+              title: const Text('Sair',
+                  style:
+                      TextStyle(fontFamily: 'Montserrat', color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context); // fecha o menu lateral primeiro
+                _confirmarSaida();
+              },
             ),
             const SizedBox(height: 20),
           ],
         ),
       ),
-
       body: _buildBody(),
-
       extendBody: true,
-      
       bottomNavigationBar: SafeArea(
         child: Container(
           margin: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
@@ -151,8 +196,10 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildNavItem(icon: Icons.eco_outlined, title: "Culturas", index: 0),
-              _buildNavItem(icon: Icons.task_rounded, title: "Análise", index: 1),
+              _buildNavItem(
+                  icon: Icons.eco_outlined, title: "Culturas", index: 0),
+              _buildNavItem(
+                  icon: Icons.task_rounded, title: "Análise", index: 1),
               _buildNavItem(icon: Icons.help_center, title: "Ajuda", index: 2),
             ],
           ),

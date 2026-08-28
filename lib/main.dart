@@ -1,8 +1,9 @@
 import 'dart:io'; // Importante para detectar a plataforma
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart'; // Nova importação
+import 'package:shared_preferences/shared_preferences.dart';
 import 'views/dashboard.dart';
+import 'views/tutorialOnboardingPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +32,50 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
         useMaterial3: true,
       ),
-      home: const WelcomePage(), 
+      home:
+          const _StartupDecider(), // trocando WelcomePage por _StartupDecider()
       debugShowCheckedModeBanner: false,
     );
+  }
+}
+
+class _StartupDecider extends StatefulWidget {
+  const _StartupDecider();
+
+  @override
+  State<_StartupDecider> createState() => _StartupDeciderState();
+}
+
+class _StartupDeciderState extends State<_StartupDecider> {
+  bool? _jaViuTutorial;
+
+  @override
+  void initState() {
+    super.initState();
+    _checarPrimeiroUso();
+  }
+
+  Future<void> _checarPrimeiroUso() async {
+    final prefs = await SharedPreferences.getInstance();
+    final visto = prefs.getBool('tutorial_visto') ?? false;
+    if (!mounted) return;
+    setState(() => _jaViuTutorial = visto);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_jaViuTutorial == null) {
+      return const Scaffold(
+        backgroundColor: Color.fromRGBO(251, 236, 217, 1),
+        body: Center(
+          child:
+              CircularProgressIndicator(color: Color.fromRGBO(126, 175, 49, 1)),
+        ),
+      );
+    }
+    return _jaViuTutorial!
+        ? const WelcomePage()
+        : const TutorialOnboardingPage();
   }
 }
 
@@ -89,7 +131,7 @@ class WelcomePage extends StatelessWidget {
                       );
                     },
                     child: const Text(
-                      'Iniciar', 
+                      'Iniciar',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

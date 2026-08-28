@@ -37,7 +37,8 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Análise excluída.', style: TextStyle(color: Colors.white)),
+        content:
+            Text('Análise excluída.', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.red,
       ),
     );
@@ -86,17 +87,20 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
                         leading: const Icon(Icons.assignment_turned_in,
                             color: Colors.green, size: 30),
                         title: Text(analise.titulo,
-                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text("Data: ${analise.data}"),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit_outlined, color: Colors.blue),
+                              icon: const Icon(Icons.edit_outlined,
+                                  color: Colors.blue),
                               onPressed: () => _irParaEdicao(analise),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete_outline, color: Colors.red),
+                              icon: const Icon(Icons.delete_outline,
+                                  color: Colors.red),
                               onPressed: () => _confirmarExclusao(analise),
                             ),
                           ],
@@ -114,11 +118,13 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Excluir Análise?"),
-        content: Text("Tem certeza que deseja apagar permanentemente os dados de '${analise.titulo}'?"),
+        content: Text(
+            "Tem certeza que deseja apagar permanentemente os dados de '${analise.titulo}'?"),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar", style: TextStyle(color: Colors.grey))),
+              child:
+                  const Text("Cancelar", style: TextStyle(color: Colors.grey))),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
@@ -157,7 +163,8 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green)),
-                        Text("Data: ${analise.data}", style: const TextStyle(color: Colors.grey)),
+                        Text("Data: ${analise.data}",
+                            style: const TextStyle(color: Colors.grey)),
                       ],
                     ),
                   ),
@@ -242,11 +249,11 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(titulo,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 4),
           ...linhas.map((linha) => Text(linha,
-                  style: const TextStyle(fontSize: 15, color: Colors.black87)))
-              .toList(),
+              style: const TextStyle(fontSize: 15, color: Colors.black87))),
         ],
       ),
     );
