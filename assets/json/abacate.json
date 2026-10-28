@@ -1,0 +1,29 @@
+{
+  "nome": "Abacate",
+  "resumo": "O abacateiro (Persea americana) é uma frutífera tropical/subtropical que leva, em média, de 3 a 5 anos para iniciar a frutificação quando propagado por mudas enxertadas. O plantio deve ser feito em covas de 60x60x60 cm, espaçadas entre 7 e 10 metros, em solos profundos, bem drenados e com boa exposição solar.",
+  "metodoCalagem": "MAIOR_QUANTIDADE",
+  "unidadeAdubacao": "g/planta",
+  "recomendacoes": [
+    "Irrigação: 2 a 3 vezes por semana nos primeiros 2 anos, reduzindo a frequência conforme o sistema radicular se desenvolve.",
+    "Adubação: reforçar Nitrogênio, Fósforo e Potássio conforme a análise de solo, especialmente na fase de formação.",
+    "Poda: poda de formação nos primeiros anos para estruturar a copa.",
+    "Calagem: corrigir a acidez do solo (pH ideal entre 5,5 e 6,5) antes do plantio.",
+    "Calagem: Calcular por 2 fórmulas (neutralização de Al³⁺ ou elevação de Ca+Mg), aplicando a maior quantidade encontrada. Utilizar calcário dolomítico se o magnésio for inferior a 5 mmolc/dm³.",
+    "Incorporação: O calcário deve ser distribuído a lanço e incorporado a 20 cm de profundidade."
+  ],
+  "phIdeal": {
+    "min": 5.5,
+    "max": 6.5
+  },
+  "tabelaAdubacao": [
+    {"epoca": "Plantio", "n": 20, "p2o5": [200, 150, 80], "k2o": [60, 40, 20]},
+    {"epoca": "1º ano", "n": 60, "p2o5": [0, 0, 0], "k2o": [30, 20, 10]},
+    {"epoca": "2º ano", "n": 80, "p2o5": [60, 40, 20], "k2o": [30, 20, 10]},
+    {"epoca": "3º ano", "n": 120, "p2o5": [80, 50, 30], "k2o": [80, 60, 40]},
+    {"epoca": "4º ano", "n": 150, "p2o5": [100, 80, 60], "k2o": [120, 100, 80]},
+    {"epoca": "5º ano", "n": 180, "p2o5": [120, 100, 80], "k2o": [150, 120, 100]},
+    {"epoca": "6º ano", "n": 200, "p2o5": [150, 150, 150], "k2o": [200, 180, 150]},
+    {"epoca": "7º ano", "n": 250, "p2o5": [180, 180, 180], "k2o": [250, 250, 250]},
+    {"epoca": "8º Diante", "n": 300, "p2o5": [180, 180, 180], "k2o": [250, 250, 250]}
+  ]
+}

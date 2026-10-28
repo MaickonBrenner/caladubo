@@ -1,0 +1,22 @@
+{
+  "nome": "Mamão",
+  "resumo": "O mamoeiro (Carica papaya L.) é uma fruteira tropical de desenvolvimento rápido e produção contínua, muito sensível ao encharcamento do solo. O cultivo deve ser realizado em solos de textura média a leve, bem drenados e ricos em matéria orgânica. O espaçamento recomendado varia de 3,0 x 2,0 m a 3,8 x 2,0 m, dependendo do porte da variedade e do manejo da lavoura.",
+  "metodoCalagem": "SOMATORIO",
+  "unidadeAdubacao": "kg/ha",
+  "recomendacoes": [
+    "Irrigação: O mamoeiro exige fornecimento constante de água, preferencialmente por gotejamento ou microaspersão, evitando o excesso de humidade junto ao colo da planta.",
+    "Adubação: Alta exigência em Azoto (N) e Potássio (K) durante a fase de frutificação, além de Boros (B) e Zinco (Zn) para evitar deformações nos frutos.",
+    "Calagem e Gessagem: Aplicar calcário para elevar a saturação por bases (V%) para cerca de 65% a 70% e corrigir o pH para a faixa ideal antes do plantio.",
+    "Controle Fitossanitário: Monitorização constante para o combate ao ácaro-vermelho, mosca-da-fruta e controlo de viroses (como o mosaico-do-mamoeiro)."
+  ],
+  
+  "phIdeal": {
+    "min": 5.5,
+    "max": 6.7
+  },
+  "tabelaAdubacao": [
+    {"epoca": "Plantio", "n": 0, "p2o5": [60, 40, 20], "k2o": [0, 0, 0]},
+    {"epoca": "1º ano", "n": 30, "p2o5": [0, 0, 0], "k2o": [60, 40, 20]},
+    {"epoca": "2º Diante", "n": 120, "p2o5": [40, 20, 10], "k2o": [150, 100, 50]}
+  ]
+}
