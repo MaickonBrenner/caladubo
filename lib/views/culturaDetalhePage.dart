@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/analiseSoloModel.dart';
+import '../models/prescritor.dart';
+import '../controllers/interpretador.dart';
 import '../database/db_helper.dart';
 import 'homePage.dart';
 
@@ -24,28 +28,52 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
 
   List<AnaliseSolo> _analisesSalvas = [];
   bool _carregandoAnalises = true;
+  bool _carregandoJson = true;
   AnaliseSolo? _analiseSelecionada;
 
-  // Conteúdo por cultura. Adicione novas entradas aqui quando liberar outras culturas.
-  final Map<String, Map<String, dynamic>> _dadosCulturas = {
-    "Abacate": {
-      "resumo":
-          "O abacateiro (Persea americana) é uma frutífera tropical/subtropical que leva, em média, de 3 a 5 anos para iniciar a frutificação quando propagado por mudas enxertadas. O plantio deve ser feito em covas de 60x60x60 cm, espaçadas entre 7 e 10 metros, em solos profundos, bem drenados e com boa exposição solar.",
-      "recomendacoes": [
-        "Irrigação: 2 a 3 vezes por semana nos primeiros 2 anos, reduzindo a frequência conforme o sistema radicular se desenvolve.",
-        "Adubação: reforçar Nitrogênio, Fósforo e Potássio conforme a análise de solo, especialmente na fase de formação.",
-        "Poda: poda de formação nos primeiros anos para estruturar a copa.",
-        "Calagem: corrigir a acidez do solo (pH ideal entre 5,5 e 6,5) antes do plantio.",
-      ],
-      "phIdeal": {"min": 5.5, "max": 6.5},
-    },
-  };
+  final Map<String, Prescritor> _dadosCulturas = {};
+
+  int _idadeSelecionadaAno = 0; 
+  double _prntInformado = 100.0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _carregarAnalises();
+    _carregarDadosIniciais();
+  }
+
+  Future<void> _carregarDadosIniciais() async {
+    await Future.wait([
+      _carregarAnalises(),
+      _carregarCulturasDosJson(),
+    ]);
+  }
+
+  Future<void> _carregarCulturasDosJson() async {
+    try {
+      final manifestMap = await AssetManifest.loadFromAssetBundle(rootBundle);
+      final jsonPaths = manifestMap.listAssets().where((String key) =>
+          key.startsWith('assets/json/') && key.endsWith('.json'));
+
+      for (String path in jsonPaths) {
+        final String conteudoJson = await rootBundle.loadString(path);
+        final Map<String, dynamic> mapaJson = json.decode(conteudoJson);
+
+        Prescritor prescritor = Prescritor.fromJson(mapaJson);
+        if (prescritor.nome.isNotEmpty) {
+          _dadosCulturas[prescritor.nome] = prescritor;
+        }
+      }
+    } catch (e) {
+      debugPrint("Erro ao carregar arquivos JSON de culturas: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _carregandoJson = false;
+        });
+      }
+    }
   }
 
   @override
@@ -65,7 +93,7 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
 
   @override
   Widget build(BuildContext context) {
-    final dados = _dadosCulturas[widget.nomeCultura];
+    final Prescritor? cultura = _dadosCulturas[widget.nomeCultura];
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(251, 236, 217, 1),
@@ -85,29 +113,33 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
           ],
         ),
       ),
-      body: dados == null
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Text(
-                  "Conteúdo para esta cultura ainda está em desenvolvimento.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ),
+      body: _carregandoJson
+          ? Center(
+              child: CircularProgressIndicator(color: verdeCaladubo),
             )
-          : TabBarView(
-              controller: _tabController,
-              children: [
-                _buildResumo(dados),
-                _buildRecomendacoes(dados),
-                _buildAnalise(dados),
-              ],
-            ),
+          : cultura == null
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24.0),
+                    child: Text(
+                      "Conteúdo para esta cultura ainda está em desenvolvimento.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ),
+                )
+              : TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildResumo(cultura),
+                    _buildRecomendacoes(cultura),
+                    _buildAnalise(cultura),
+                  ],
+                ),
     );
   }
 
-  Widget _buildResumo(Map<String, dynamic> dados) {
+  Widget _buildResumo(Prescritor cultura) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -137,7 +169,7 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
           ),
           const SizedBox(height: 8),
           Text(
-            dados["resumo"] as String,
+            cultura.resumo,
             style: const TextStyle(fontSize: 15, height: 1.4),
           ),
         ],
@@ -145,20 +177,17 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
     );
   }
 
-  Widget _buildRecomendacoes(Map<String, dynamic> dados) {
-    final List<String> recomendacoes =
-        List<String>.from(dados["recomendacoes"] as List);
+  Widget _buildRecomendacoes(Prescritor cultura) {
     return ListView.builder(
       padding: const EdgeInsets.all(20),
-      itemCount: recomendacoes.length,
+      itemCount: cultura.recomendacoes.length,
       itemBuilder: (context, index) {
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: ListTile(
             leading: Icon(Icons.check_circle, color: verdeCaladubo),
-            title: Text(recomendacoes[index],
+            title: Text(cultura.recomendacoes[index],
                 style: const TextStyle(fontSize: 14)),
           ),
         );
@@ -166,9 +195,9 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
     );
   }
 
-  Widget _buildAnalise(Map<String, dynamic> dados) {
+  Widget _buildAnalise(Prescritor cultura) {
     if (_analiseSelecionada != null) {
-      return _buildDiagnostico(dados);
+      return _buildDiagnostico(cultura);
     }
 
     return Column(
@@ -241,15 +270,17 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
     );
   }
 
-  Widget _buildDiagnostico(Map<String, dynamic> dados) {
+  Widget _buildDiagnostico(Prescritor cultura) {
     final analise = _analiseSelecionada!;
-    final double phAtual = analise.ph;
 
-    final Map<String, dynamic> phIdealRaw =
-        Map<String, dynamic>.from(dados["phIdeal"] ?? {});
-    final double phMin = (phIdealRaw["min"] as num?)?.toDouble() ?? 0.0;
-    final double phMax = (phIdealRaw["max"] as num?)?.toDouble() ?? 14.0;
-    final bool phOk = phAtual >= phMin && phAtual <= phMax;
+    final interpretacao = Interpretador.avaliarEInterpretar(
+      analise: analise,
+      cultura: cultura,
+      idadePlantaAno: _idadeSelecionadaAno,
+      prnt: _prntInformado,
+    );
+
+    final calc = interpretacao.calculos;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -274,37 +305,120 @@ class _CulturaDetalhePageState extends State<CulturaDetalhePage>
           ),
           const Divider(height: 20),
           Text(
-            "Diagnóstico para o plantio de ${widget.nomeCultura}",
+            "Laudo Técnico e Recomendações para ${widget.nomeCultura}",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: verdeCaladubo,
                 fontSize: 16),
           ),
           const SizedBox(height: 12),
+          
+          // Alerta de pH
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: (phOk ? Colors.green : Colors.orange).withOpacity(0.12),
+              color: (interpretacao.pHestaIdeal ? Colors.green : Colors.orange).withOpacity(0.12),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(phOk ? Icons.check_circle : Icons.warning_amber,
-                    color: phOk ? Colors.green : Colors.orange),
+                Icon(interpretacao.pHestaIdeal ? Icons.check_circle : Icons.warning_amber,
+                    color: interpretacao.pHestaIdeal ? Colors.green : Colors.orange),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(
-                    phOk
-                        ? "pH do solo (${phAtual.toStringAsFixed(1)}) está dentro da faixa ideal para ${widget.nomeCultura} ($phMin a $phMax)."
-                        : "pH do solo (${phAtual.toStringAsFixed(1)}) está fora da faixa ideal para ${widget.nomeCultura} ($phMin a $phMax). Recomenda-se correção antes do plantio.",
-                  ),
+                  child: Text(interpretacao.mensagempH),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          const Text("Laudo completo da análise:",
+
+          // Card de Calagem Oficial
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Correção do Solo (Calagem)",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  const Divider(),
+                  Text("Tipo recomendado: ${calc.tipoCalcarioRecomendado}"),
+                  const SizedBox(height: 6),
+                  Text(calc.avisoCalagem, style: const TextStyle(fontWeight: FontWeight.w500)),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Card de Adubação NPK Oficial por Idade
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Adubação NPK Recomendada",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                      DropdownButton<int>(
+                        value: _idadeSelecionadaAno,
+                        items: List.generate(
+                          cultura.tabelaAdubacao.length,
+                          (index) => DropdownMenuItem(
+                            value: index,
+                            child: Text(cultura.tabelaAdubacao[index].epoca),
+                          ),
+                        ),
+                        onChanged: (novoValor) {
+                          if (novoValor != null) {
+                            setState(() {
+                              _idadeSelecionadaAno = novoValor;
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                    Text("• Nitrogênio (N): ${calc.adubacaoN} ${calc.unidadeAdubacao}"),
+                    Text("• Fósforo (P₂O₅): ${calc.adubacaoP2O5} ${calc.unidadeAdubacao}"),
+                    Text("• Potássio (K₂O): ${calc.adubacaoK2O} ${calc.unidadeAdubacao}"),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Card de Gessagem / Correção em Profundidade
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Correção do Subsolo (Gessagem)",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  const Divider(),
+                  Text(interpretacao.avisoGessagem, 
+                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)), 
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          const Text("Descrição:",
               style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 6),
           Container(

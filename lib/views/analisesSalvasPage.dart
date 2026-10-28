@@ -210,7 +210,7 @@ class _AnalisesSalvasPageState extends State<AnalisesSalvasPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Laudo / Recomendação:",
+                            const Text("Descrição:",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.green)),

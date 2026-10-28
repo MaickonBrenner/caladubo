@@ -15,32 +15,32 @@ class CulturasEspecificasPage extends StatelessWidget {
           "nome": "Abacate",
           "imagem": "assets/cards/abacate.png",
           "disponivel": true
-        }, // Só o abacate está ativo!
+        }, 
+        {
+          "nome": "Mamão",
+          "imagem": "assets/cards/mamao.png",
+          "disponivel": true
+        },
+        {
+          "nome": "Caju",
+          "imagem": "assets/cards/caju.png",
+          "disponivel": false
+        },
         {
           "nome": "Banana",
           "imagem": "assets/cards/banana.png",
           "disponivel": false
-        },
-        {
-          "nome": "Abacaxi",
-          "imagem": "assets/cards/abacaxi.png",
-          "disponivel": false
-        },
-        {
-          "nome": "Laranja",
-          "imagem": "assets/cards/laranja.png",
-          "disponivel": false
-        },
+        }
       ],
       "Grandes Cul.": [
         {
-          "nome": "Soja",
-          "imagem": "assets/cards/soja.png",
+          "nome": "Milho",
+          "imagem": "assets/cards/milho.png",
           "disponivel": false
         },
         {
-          "nome": "Milho",
-          "imagem": "assets/cards/milho.png",
+          "nome": "Soja",
+          "imagem": "assets/cards/soja.png",
           "disponivel": false
         },
         {

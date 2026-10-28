@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home:
-          const _StartupDecider(), // trocando WelcomePage por _StartupDecider()
+          const _StartupDecider(), 
       debugShowCheckedModeBanner: false,
     );
   }

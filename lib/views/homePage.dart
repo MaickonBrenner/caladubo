@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../database/db_helper.dart';
 import '../models/analiseSoloModel.dart';
 import 'analisesSalvasPage.dart';
+import '../controllers/calculador.dart';
 
 class HomePage extends StatefulWidget {
   final AnaliseSolo? analiseParaEditar;
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-//não salvar sem os dados obrigatórios
+  // Validação dos campos obrigatórios
   List<String> _validarCampos() {
     List<String> faltando = [];
     if (_titulo.text.trim().isEmpty) faltando.add("Título da Análise");
@@ -83,59 +84,36 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _salvarAnalise() async {
-    // 1. Preparação dos dados e cálculos
-    // Mantemos a data original se for edição, ou criamos uma nova se for cadastro
+    // 1. Preparação dos dados brutos informados pelo usuário
     String dataFinal = widget.analiseParaEditar?.data ??
         DateFormat('dd.MM.yyyy').format(DateTime.now());
     String nomeDigitado = _titulo.text.isEmpty ? "Área Sem Nome" : _titulo.text;
 
-    double kMg = double.tryParse(_k.text) ?? 0.0;
-    double ca = double.tryParse(_ca.text) ?? 0.0;
-    double mg = double.tryParse(_mg.text) ?? 0.0;
-    double al = double.tryParse(_al.text) ?? 0.0;
-    double h = double.tryParse(_h.text) ?? 0.0;
+    // Classifica o solo
+    Calculador calc = Calculador();
+    double getArgila = double.tryParse(_argila.text) ?? 0.0;
+    String tipoSolo = calc.classificarSolo(getArgila);
 
-    double kCmol = kMg / 391.0;
-    double hAl = h + al;
-    double sb = ca + mg + kCmol;
-    double ctc = sb + hAl;
-    double vAtual = ctc > 0 ? (sb / ctc) * 100 : 0.0;
-
-    double vDesejado = 60.0;
-    double prnt = 100.0;
-    double necessidadeCalagem = 0.0;
-    String avisoSolo = "Solo apresenta boa fertilidade inicial.";
-
-    if (vAtual < vDesejado) {
-      necessidadeCalagem = (ctc * (vDesejado - vAtual)) / prnt;
-      if (necessidadeCalagem > 0) {
-        avisoSolo =
-            "ATENÇÃO: Baixa saturação de bases (${vAtual.toStringAsFixed(1)}%).\nRecomendação: Aplicar ${necessidadeCalagem.toStringAsFixed(2)} t/ha de calcário.";
-      }
-    }
-
-    // 2. Criar/Atualizar o objeto do Modelo
+    // 2. Criar/Atualizar o objeto do Modelo de forma limpa (sem cálculos acoplados)
     AnaliseSolo analiseProcessada = AnaliseSolo(
-      id: widget.analiseParaEditar
-          ?.id, // Crítico: Se tiver ID, o SQLite entende que é Update
+      id: widget.analiseParaEditar?.id, // Se tiver ID, o SQLite entende que é Update
       titulo: nomeDigitado,
       data: dataFinal,
       profundidade: double.tryParse(_profundidade.text) ?? 0.0,
       argila: double.tryParse(_argila.text) ?? 0.0,
       mo: double.tryParse(_mo.text) ?? 0.0,
       ph: double.tryParse(_ph.text) ?? 0.0,
-      al: al,
-      h: h,
+      al: double.tryParse(_al.text) ?? 0.0,
+      h: double.tryParse(_h.text) ?? 0.0,
       p: double.tryParse(_p.text) ?? 0.0,
-      k: kMg,
-      ca: ca,
-      mg: mg,
+      k: double.tryParse(_k.text) ?? 0.0,
+      ca: double.tryParse(_ca.text) ?? 0.0,
+      mg: double.tryParse(_mg.text) ?? 0.0,
       na: double.tryParse(_na.text) ?? 0.0,
-      detalhes:
-          "V%: ${vAtual.toStringAsFixed(1)}% | CTC: ${ctc.toStringAsFixed(2)}\n$avisoSolo",
+      detalhes: "Classificação: Solo $tipoSolo\nAnálise cadastrada em $dataFinal.\nAmostra com profundidade de ${_profundidade.text} cm.",
     );
 
-    // 3. Persistência Decisiva (Insert vs Update)
+    // 3. Persistência no SQLite (Insert vs Update)
     if (widget.analiseParaEditar == null) {
       await DBHelper().insertAnalise(analiseProcessada);
     } else {
@@ -144,7 +122,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!mounted) return;
 
-    // 4. Feedback
+    // 4. Feedback visual e redirecionamento
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -156,18 +134,16 @@ class _HomePageState extends State<HomePage> {
             Text(widget.analiseParaEditar == null ? "Salvo" : "Atualizado"),
           ],
         ),
-        content: Text("Dados de '$nomeDigitado' processados com sucesso!"),
+        content: Text("Dados de '$nomeDigitado' salvos com sucesso!"),
         actions: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: verdeCaladubo),
             onPressed: () {
               Navigator.pop(context); // Fecha o dialog
-              // Se veio da tela de histórico, apenas volta para lá atualizando
               if (widget.analiseParaEditar != null) {
                 Navigator.pop(context, true);
               } else {
                 Navigator.push(
-                  //trocando pushReplacement por apenas push "problema da tela duplicada"
                   context,
                   MaterialPageRoute(
                       builder: (context) => const AnalisesSalvasPage()),
@@ -181,7 +157,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /* void _resetForm() {
+  void _resetForm() {
     setState(() {
       _titulo.clear();
       _profundidade.clear();
@@ -197,7 +173,7 @@ class _HomePageState extends State<HomePage> {
       _h.clear();
       _currentStep = 0;
     });
-  } */
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +194,6 @@ class _HomePageState extends State<HomePage> {
           if (_currentStep < 3) {
             setState(() => _currentStep += 1);
           } else {
-            // trocando } else { _salvarAnalise(); } },
             final faltando = _validarCampos();
             if (faltando.isNotEmpty) {
               showDialog(
@@ -232,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   content: Text(
-                      "Preencha os seguintes campos antes de salvar:\n\n• ${faltando.join('\n• ')}"),
+                      "Preencha os seguintes campos antes de salvar:\n\n${faltando.join('\n')}"),
                   actions: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -246,6 +221,7 @@ class _HomePageState extends State<HomePage> {
               );
             } else {
               _salvarAnalise();
+              _resetForm();
             }
           }
         },
@@ -295,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                 TextFormField(
                     controller: _profundidade,
                     decoration:
-                        const InputDecoration(labelText: 'Profundidade (cm)'),
+                        const InputDecoration(labelText: 'Profundidade em cm (Ex: 20 ou 40)'),
                     keyboardType: TextInputType.number),
               ],
             ),
